@@ -1,0 +1,28 @@
+.space-grid {
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    margin-left: 150px;
+    margin-top: 50px;
+    height: 400px;
+    width: 1000px;
+    /* padding: 200px;  */
+}
+
+.ship, .alien {
+    width: 12%;
+    height: 12%;
+    border-radius: 20px;
+    font-size: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.ship {
+    border: solid blue;
+}
+.alien {
+    border: solid red;
+    position: relative;
+    left: 74.8%;
+}

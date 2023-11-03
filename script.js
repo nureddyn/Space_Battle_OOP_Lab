@@ -5,6 +5,7 @@ class Round {
     constructor(Array) {
         this.array = Array;
     }
+    // Show in screen each character
 }
 
 class Character {
@@ -13,6 +14,17 @@ class Character {
         this.hull = hull;
         this.firePower = firePower;
         this.accuracy = accuracy;
+    }
+    showInScreen() {
+        const body = document.createElement('div');
+        body.classList.add(`${this.type}`);
+        body.innerHTML = this.hull;
+        
+        if (document.querySelector(`.${this.type}`)) {
+            document.querySelector('.space-grid')
+            .removeChild(document.querySelector(`.${this.type}`));
+        }
+        document.querySelector('.space-grid').append(body);
     }
     attack(target) {
         // This depends on accuracy
@@ -39,7 +51,7 @@ class Character {
 class Ship extends Character {
     constructor(type, hull, firePower, accuracy) {
         super(type, hull, firePower, accuracy)
-        this.type = 'Ship';
+        this.type = 'ship';
         this.hull = 20;
         this.firePower = 5;
         this.accuracy = 0.7;
@@ -49,7 +61,7 @@ class Ship extends Character {
 class Alien extends Character {
     constructor(type, hull, firePower, accuracy) {
         super(type, hull, firePower, accuracy)
-        this.type = 'Alien';
+        this.type = 'alien';
         this.hull = Math.floor(Math.random() * (6 - 3) + 3);
         this.firePower = Math.floor(Math.random() * (4 - 2) + 2);
         this.accuracy = Number((Math.random() * (0.8 - 0.6) + 0.6).toFixed(2));
@@ -59,8 +71,12 @@ class Alien extends Character {
 let ship1 = new Ship()
 // console.log(ship1);
 let alien1 = new Alien();
-console.log(alien1.displayName());
-console.log(ship1.displayName());
+ship1.showInScreen();
+alien1.showInScreen();
+// console.log(ship1.displayName());
 let firstRound = new Round([ship1.getProperties(), alien1.getProperties()]);
 
-// ship1.attack(alien1);
+document.querySelector('#ship-attack').onclick = () => {
+    ship1.attack(alien1);
+    alien1.showInScreen();
+};
