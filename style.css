@@ -26,3 +26,19 @@
     position: relative;
     left: 74.8%;
 }
+
+.ship-round, .alien-round {
+    display: flex;
+    justify-content: space-between;
+    position:relative;
+    /* border: solid black; */
+    width: 300px;
+
+}
+.ship-round {
+    left: 11%;
+}
+.alien-round {
+    top: -75px;
+    left: 63.5%;
+}
