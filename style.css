@@ -1,5 +1,10 @@
+body {
+    background-color: #343d46;
+    color: #c0c5ce;
+}
 .space-grid {
     border: 1px solid black;
+    border-width: 1rem;
     display: flex;
     align-items: center;
     margin-left: 150px;
@@ -7,24 +12,58 @@
     height: 400px;
     width: 1000px;
     /* padding: 200px;  */
+    background-image: url("https://media.tenor.com/HKWMTFj2DowAAAAd/space.gif");
+    background-repeat: no-repeat;
+    background-size:cover;
 }
 
 .ship, .alien {
-    width: 12%;
-    height: 12%;
-    border-radius: 20px;
+    width: 20%;
+    height: 30%;
+    /* border-radius: 20px; */
     font-size: 50px;
     display: flex;
     justify-content: center;
 }
 
-.ship {
-    border: solid blue;
+.ship, .ship2 {
+    height: 60%;
 }
-.alien {
-    border: solid red;
+
+@keyframes moveRight {
+    0% {
+      transform: translateX(0%);
+    }
+    50% {
+      transform: translateX(80%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+}
+.ship2 {
+    animation: moveRight 1s ease-in-out 1;
+}
+
+.alien, .alien2 {
     position: relative;
-    left: 74.8%;
+    left: 55%;
+}
+
+@keyframes moveLeft {
+    0% {
+      transform: translateX(0%);
+    }
+    50% {
+      transform: translateX(-80%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+}
+
+.alien2 {
+    animation: moveLeft 1s ease-in-out 1;
 }
 
 .ship-round, .alien-round {
@@ -41,4 +80,19 @@
 .alien-round {
     top: -75px;
     left: 63.5%;
+}
+
+#ship-attack, #start {
+    display: flex;
+    justify-content: center;
+    border: solid black;
+    font-size: large;
+    border-width: 0.5rem;
+    width: 100px;
+}
+
+#ship-attack:hover, #start:hover {
+    cursor:pointer;
+    color: white;
+    
 }

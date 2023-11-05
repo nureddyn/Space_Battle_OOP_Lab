@@ -5,6 +5,7 @@ let Rounds = [];
 class Round {
     constructor(characters) {
         this.characters = characters;
+        this.continue = true;
     }
     // Show in screen each character value
     showData () {
@@ -24,8 +25,8 @@ class Round {
     }
     // Update round values
     updateData (character1, character2) {
-        this.characters[0] = character1.getProperties();
-        this.characters[1] = character2.getProperties();
+        this.characters[0] = character1.getAttributes();
+        this.characters[1] = character2.getAttributes();
     }
 }
 
@@ -38,8 +39,14 @@ class Character {
         this.accuracy = accuracy;
     }
     showInScreen() {
-        const body = document.createElement('div');
+        let image;
+        if (this.type === 'ship') {
+            image = "https://giffiles.alphacoders.com/164/16462.gif";
+        } else image = "https://i.gifer.com/origin/24/2432cf5ff737ad7d1794a29d042eb02e_w200.gif";
+
+        const body = document.createElement('img');
         body.classList.add(`${this.type}`);
+        body.setAttribute('src', image);
         // body.innerHTML = this.hull;
 
         if (document.querySelector(`.${this.type}`)) {
@@ -47,16 +54,36 @@ class Character {
             .removeChild(document.querySelector(`.${this.type}`));
         }
         document.querySelector('.space-grid').append(body);
+
+    }
+    removeFromScreen() {
+        if (document.querySelector(`.${this.type}`)) {
+            document.querySelector(`.${this.type}`).remove();
+        }
     }
     attack(target) {
         // This depends on accuracy
+        // TODO: Check if hull change or not
+        const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
         if (Math.random() < this.accuracy) {
             target.hull-=this.firePower;
-            if (target.hull > 0) alert(`${target.type} was shoot`);
-            else alert(`${target.type} destroyed`);
+            if (target.hull > 0) {
+                async function received () {
+                    await sleep(500);
+                    alert(`${target.type} was shot`);
+                }
+                received();
+            }
+            else {
+                async function shot () {
+                    await sleep(500);
+                    alert(`${target.type} destroyed`)
+                }
+                shot();
+            };
+        }
     }
-    }
-    getProperties () {
+    getAttributes () {
         return {
             'type': this.type,
             "hull": this.hull,
@@ -65,7 +92,7 @@ class Character {
         }
     }
     move() {
-        return 'I am moving';
+        document.querySelector(`.${this.type}`).classList.toggle(`${this.type}2`);
     }
     displayName () {
         return this.type;
@@ -95,72 +122,110 @@ class Alien extends Character {
 }
 
 // Round instances and character actions here:
-let firstRound;
-let alienNumber = 1;
+// TODO: Create 6 aliens with a loop, and iterate over each one (to go on each round)
+let round;
+let alienNumber = 6;
+// Alien List
+let alienList = [];
 
+// Function to populate alien List
+function createHorde() {
+    for (let i = 0; i < alienNumber; i ++) {
+        let alien = new Alien();
+        alienList.push(alien);
+    }
+    return alienList;
+}
+
+function confirmation() {
+    let response = confirm('Do you want to continue?');
+    return response;
+}
+
+let ship;
+let aliens;
+let currentAlien;
+let alienIndex = 0;
 // Button to start round
-document.querySelector('#start-round').onclick = () => {
-    document.querySelector('#start-round').setAttribute('disabled', 'true');
+document.querySelector('#start').onclick = () => {
+    document.querySelector('#start').setAttribute('disabled', 'true');
     document.querySelector('#ship-attack').removeAttribute('disabled');
 
-    // Create each character
-    let ship1 = new Ship();
-    let alien1 = new Alien();
-    // Show each character in screen
-    ship1.showInScreen();
-    alien1.showInScreen();
+    // Create player ship
+    ship = new Ship();
+    // Populate alienList
+    aliens = createHorde();
+    // let alienIndex = 0;
+    
+    // Show ship in screen
+    ship.showInScreen();
+    // Show current alien on screen
+    currentAlien = aliens[alienIndex];
+    currentAlien.showInScreen();
 
     // Round instance
-    firstRound = new Round([ship1.getProperties(), alien1.getProperties()]);
+    round = new Round([ship.getAttributes(), currentAlien.getAttributes()]);
     // Display round data
-    firstRound.showData();
-    // console.log(firstRound);
+    round.showData();
+}
 
-    // Player attack button
+    
     document.querySelector('#ship-attack').onclick = () => {
         // Attack result
-        ship1.attack(alien1);
-        alien1.showInScreen();
+        ship.move();
+        ship.attack(currentAlien);
 
         // Check if player won round
-        if (alien1.hull <= 0) {
-            alien1.showInScreen();
+        if (currentAlien.hull <= 0) {
+            // Destroy currentAlien
+            currentAlien.removeFromScreen();
             // Update round chart
-            firstRound.updateData(ship1, alien1);
-            firstRound.showData();
-
-            // console.log(firstRound);
-            // Substract alien counter
+            round.updateData(ship, currentAlien);
+            round.showData();
+            // Substract currentAlien counter
             alienNumber-=1;
 
-            // Check if player won the game
             if (alienNumber > 0) {
                 // Next round or retreat
-                let response = prompt('Press "y" to continue "n" to retreat');
-                // console.log(response);
-
-                // Save round
-                Rounds.push(firstRound);
+                let promise = new Promise(resolve => setTimeout(resolve, 1000));
+        
+                
+                promise.then(() => {
+                    let response = confirmation();
+                    if (response === false) {
+                        alert('Game finished');
+                        return;
+                    }
+                    else {
+                        alienIndex+=1;
+                        currentAlien = aliens[alienIndex];
+                        currentAlien.showInScreen();
+                        round.updateData(ship, currentAlien);
+                        round.showData();
+                    }
+                });
             } else {
                 alert("You win");
                 document.querySelector('#ship-attack').setAttribute('disabled', 'true');
-                document.querySelector('#start-round').removeAttribute('disabled');
+                document.querySelector('#start').removeAttribute('disabled');
+                return;
             }
+
         } else {
             // Alien atack
-            alien1.attack(ship1);
+            currentAlien.move();
+            currentAlien.attack(ship);
             // Update round data
-            firstRound.updateData(ship1, alien1);
-            ship1.showInScreen()
-            firstRound.showData();
+            round.updateData(ship, currentAlien);
+            // ship.showInScreen()
+            round.showData();
 
             // Player lose game
-            if (ship1.hull <= 0) {
+            if (ship.hull <= 0) {
                 alert("Alien wins");
                 document.querySelector('#ship-attack').setAttribute('disabled', 'true');
-                document.querySelector('#start-round').removeAttribute('disabled');
+                document.querySelector('#start').removeAttribute('disabled');
             }
-            // console.log(firstRound);
         }
+        Rounds.push(round);
     };
-};
