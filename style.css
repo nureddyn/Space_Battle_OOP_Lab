@@ -1,6 +1,7 @@
 body {
     background-color: #343d46;
     color: #c0c5ce;
+    text-align: center;
 }
 .space-grid {
     border: 1px solid black;
@@ -28,6 +29,10 @@ body {
 
 .ship, .ship2 {
     height: 60%;
+}
+
+.alert1, .alert2 {
+    font-size: 20px;
 }
 
 @keyframes moveRight {

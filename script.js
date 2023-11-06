@@ -68,16 +68,24 @@ class Character {
         if (Math.random() < this.accuracy) {
             target.hull-=this.firePower;
             if (target.hull > 0) {
+                // document.querySelector('alert1').innerHTML = `${target.type} was shot`;
+                // document.querySelector('alert1').removeAttribute('hidden);
                 async function received () {
                     await sleep(500);
-                    alert(`${target.type} was shot`);
+                    // alert(`${target.type} was shot`);
+                    document.querySelector('.alert1').innerHTML = `${target.type} was shot`;
+                    document.querySelector('.alert1').removeAttribute('hidden');
+                    // document.querySelector('.alert1').setAttribute('hidden', 'true');
                 }
                 received();
             }
             else {
                 async function shot () {
                     await sleep(500);
-                    alert(`${target.type} destroyed`)
+                    // alert(`${target.type} destroyed`);
+                    document.querySelector('.alert1').innerHTML = `${target.type} destroyed`;
+                    document.querySelector('.alert1').removeAttribute('hidden');
+                    // document.querySelector('.alert1').setAttribute('hidden', 'true');
                 }
                 shot();
             };
@@ -174,6 +182,7 @@ document.querySelector('#start').onclick = () => {
         // Attack result
         ship.move();
         ship.attack(currentAlien);
+        document.querySelector('.alert1').setAttribute('hidden', 'true');
 
         // Check if player won round
         if (currentAlien.hull <= 0) {
@@ -215,6 +224,7 @@ document.querySelector('#start').onclick = () => {
             // Alien atack
             currentAlien.move();
             currentAlien.attack(ship);
+            document.querySelector('.alert1').setAttribute('hidden', 'true');
             // Update round data
             round.updateData(ship, currentAlien);
             // ship.showInScreen()
