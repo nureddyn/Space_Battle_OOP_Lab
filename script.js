@@ -63,19 +63,15 @@ class Character {
     }
     attack(target) {
         // This depends on accuracy
-        // TODO: Check if hull change or not
         const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
         if (Math.random() < this.accuracy) {
             target.hull-=this.firePower;
             if (target.hull > 0) {
-                // document.querySelector('alert1').innerHTML = `${target.type} was shot`;
-                // document.querySelector('alert1').removeAttribute('hidden);
                 async function received () {
                     await sleep(500);
                     // alert(`${target.type} was shot`);
                     document.querySelector('.alert1').innerHTML = `${target.type} was shot`;
                     document.querySelector('.alert1').removeAttribute('hidden');
-                    // document.querySelector('.alert1').setAttribute('hidden', 'true');
                 }
                 received();
             }
@@ -85,7 +81,6 @@ class Character {
                     // alert(`${target.type} destroyed`);
                     document.querySelector('.alert1').innerHTML = `${target.type} destroyed`;
                     document.querySelector('.alert1').removeAttribute('hidden');
-                    // document.querySelector('.alert1').setAttribute('hidden', 'true');
                 }
                 shot();
             };
