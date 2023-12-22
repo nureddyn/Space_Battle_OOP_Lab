@@ -125,7 +125,6 @@ class Alien extends Character {
 }
 
 // Round instances and character actions here:
-// TODO: Create 6 aliens with a loop, and iterate over each one (to go on each round)
 let round;
 let alienNumber = 6;
 // Alien List
